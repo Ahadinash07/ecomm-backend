@@ -11,7 +11,10 @@ const RetailerregisterRoute = require('./Routes/RetailerRegistationRoute/Retaile
 const RetailerProfileRoute = require('./Routes/RetailerProfileRoute/RetailerProfileRoute');
 const ProductRoute = require('./Routes/ProductRoute/ProductRoute');
 const ProductDescriptionRoute = require('./Routes/ProductDescriptionRoute/ProductDescriptionRoute');
-
+const UserRoute = require('./Routes/UserRoute/UserRoute');
+const CartRoute = require('./Routes/CartRoute/CartRoute');
+const OrderRoute = require('./Routes/OrderRoutes/OrderRoutes');
+const AddressRoute = require('./Routes/AddressRoute/AddressRoute');
 
 const app = express();
 env.config();
@@ -28,17 +31,25 @@ app.use('/', AdminRoleAssignRoute);
 
 app.use('/', AdminUserProfileRoute);
 
-app.use('/', CategoryRoute);
+app.use('/api', CategoryRoute);
 
-app.use('/', SubCategoryRoute);
+app.use('/api', SubCategoryRoute);
 
 app.use('/', RetailerregisterRoute);
 
 app.use('/', RetailerProfileRoute);
 
-app.use('/', ProductRoute);
+app.use('/api/products', ProductRoute);
 
 app.use('/', ProductDescriptionRoute);
+
+app.use('/api/auth', UserRoute);
+
+app.use('/api/cart', CartRoute);
+
+app.use('/api/orders', OrderRoute);
+
+app.use('/api/addresses', AddressRoute);
 
 if (require.main === module) {
     app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
