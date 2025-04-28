@@ -20,7 +20,7 @@ const app = express();
 env.config();
 app.use(cors({
     // origin: ['http://localhost:5173', 'https://ecomm-frontend-mu.vercel.app'],
-    origin: ['http://localhost:5173', 'https://e-shop-client.netlify.app'],
+    origin: ['https://e-shop-client.netlify.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
