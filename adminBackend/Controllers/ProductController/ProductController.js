@@ -318,28 +318,63 @@ const GetBrandsController = async (req, res) => {
   }
 };
 
-const GetFeaturedProductsController = async (req, res) => {
-  try {
-    const query = `SELECT p.*, pd.colors, pd.sizes, pd.weight, pd.dimensions, pd.materials, pd.features, pd.images AS description_images, pd.videos 
-      FROM product p 
-      LEFT JOIN product_descriptions pd ON p.productId = pd.productId 
-      ORDER BY p.addedAt DESC 
-      LIMIT 8`;
+// const GetFeaturedProductsController = async (req, res) => {
+//   try {
+//     const query = `SELECT p.*, pd.colors, pd.sizes, pd.weight, pd.dimensions, pd.materials, pd.features, pd.images AS description_images, pd.videos 
+//       FROM product p 
+//       LEFT JOIN product_descriptions pd ON p.productId = pd.productId 
+//       ORDER BY p.addedAt DESC 
+//       LIMIT 8`;
     
-    db.query(query, (err, results) => {
+//     db.query(query, (err, results) => {
+//       if (err) {
+//         console.error('Database Error:', err);
+//         return res.status(500).json({ message: 'Database error' });
+//       }
+
+//       const products = results.map(processProduct);
+
+//       return res.status(200).json({ products });
+//     });
+//   } catch (error) {
+//     console.error('Server Error:', error);
+//     return res.status(500).json({ message: 'Internal server error' });
+//   }
+// };
+
+
+const GetFeaturedProductsController = async (req, res) => {
+  // Simple check if database is connected
+  if (db.state !== 'connected') {
+      return res.status(500).json({ 
+          message: 'Database not connected',
+          error: 'No active database connection' 
+      });
+  }
+
+  const query = `SELECT p.*, pd.colors, pd.sizes, pd.weight, pd.dimensions, 
+                pd.materials, pd.features, pd.images AS description_images, pd.videos 
+                FROM product p 
+                LEFT JOIN product_descriptions pd ON p.productId = pd.productId 
+                ORDER BY p.addedAt DESC 
+                LIMIT 8`;
+  
+  db.query(query, (err, results) => {
       if (err) {
-        console.error('Database Error:', err);
-        return res.status(500).json({ message: 'Database error' });
+          console.error('Database Error:', err.message);
+          return res.status(500).json({ 
+              message: 'Database query failed',
+              error: err.message 
+          });
+      }
+
+      if (!results || results.length === 0) {
+          return res.status(404).json({ message: 'No featured products found' });
       }
 
       const products = results.map(processProduct);
-
       return res.status(200).json({ products });
-    });
-  } catch (error) {
-    console.error('Server Error:', error);
-    return res.status(500).json({ message: 'Internal server error' });
-  }
+  });
 };
 
 const GetProductsBySubcategory = async (req, res) => {
