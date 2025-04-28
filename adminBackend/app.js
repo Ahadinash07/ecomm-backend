@@ -18,7 +18,12 @@ const AddressRoute = require('./Routes/AddressRoute/AddressRoute');
 
 const app = express();
 env.config();
-app.use(cors());
+app.use(cors({
+    origin: ['http://localhost:5173/', 'https://ecomm-frontend-mu.vercel.app/'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+}));
 app.use(express.json());
 
 const PORT = process.env.SERVER_PORT;
